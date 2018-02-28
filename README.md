@@ -70,7 +70,7 @@ mode:  build_index, pipel, align, calmeth, annoation, methyPlot, batDMR, visul2s
 OUTPUT FILE
 ------
 
-Output file format and details see "output_details.pdf".<br>
+Output file format and details see "https://github.com/GuoliangLi-HZAU/BatMeth2/blob/master/output_details.pdf".<br>
 
 Functions in BatMeth2
 ------
