@@ -11,7 +11,7 @@ genome_index = ""
 input_prefix = "None"
 input_prefix1 = ""
 input_prefix2 = ""
-pairedend=False
+pairedend="False"
 output_prefix = "None"
 
 ##calmeth
@@ -37,6 +37,9 @@ CG = 0.6
 CHG = 0.2
 CHH = 0.1
 
+##aligner
+aligner = "BatMeth2" ## bwa-meth bsmap bismark
+genome_others = ""
 
 abspath = ""
 
@@ -47,23 +50,27 @@ def usage():
     print "    Usage: BatMeth2 build_index genomefile. (must run this step first)"
 
     print "\n[pipel (Contains: align, calmeth, annoation, methyPlot, mkreport)]"
+    print "    [select aligner]"
+    print "    --aligner    BatMeth2(default), bwa-meth, bsmap, bismark2"
+    print "    [other aligners paramaters]"
+    print "    --go    Name of the genome, contaion index build by aligner. (bwa-meth/bismark2)"
     print "    [main paramaters]"
     print "    -o    Name of output file prefix"
     print "    [alignment paramaters]"
     print "    -i    Name of input file, if paired-end. please use -1, -2"
     print "    -1    Name of input file left end, if single-end. please use -i"
     print "    -2    Name of input file left end"
-    print "    -g    Name of the genome mapped against"
+    print "    -g    Name of the genome mapped against, make sure build index first."
     print "    -n    maximum mismatches allowed due to seq. errors"
     print "    -p <interger>    Launch <integer> threads"
     print "    [calmeth paramaters]"
-    print "    --Qual=      caculate the methratio while read QulityScore >= Q. default:10"
+    print "    --Qual=      calculate the methratio while read QulityScore >= Q. default:10"
     print "    --redup=     REMOVE_DUP"
-    print "    --region=    Bins for DMR caculate , default 1000bp ."
+    print "    --region=    Bins for DMR calculate , default 1000bp ."
     print "    [calmeth and annoation paramaters]"
     print "    --coverage=    >= <INT> coverage. default:5"
     print "    --binCover=    >= <INT> nCs per region. default:3"
-    print "    --chromstep=   Chrosome using an overlapping sliding window of 100000bp at a step of 50000bp. default step: 50000(bp)"
+    print "    --chromstep=   Chromsome using an overlapping sliding window of 100000bp at a step of 50000bp. default step: 50000(bp)"
     print "    [annoation paramaters]"
     print "    --gtf=/--bed=    Gtf or gff file / bed file"
     print "    --distance=    DNA methylation level distributions in body and <INT>-bp flanking sequences. The distance of upstream and downstream. default:2000"
@@ -91,8 +98,8 @@ if len(sys.argv) < 3:
 
 def detect_paramater():
     opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:", ["gtf=", "bed=", "coverage=", "binCover=", 
-        "chromstep=", "step=", "distance=", "Qual=", "region="])
-    global input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual
+        "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go="])
+    global pairedend, input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual, aligner, genome_others
     global gfffile
     for op, value in opts:
 #        print op, value
@@ -102,7 +109,7 @@ def detect_paramater():
             input_prefix1 = value
         if op == "-2":
             input_prefix2 = value
-            pairedend=True
+            pairedend="True"
         elif op == "-o":
             output_prefix = value
         elif op == "-g":
@@ -129,6 +136,10 @@ def detect_paramater():
             Qual = value
         elif op == "--region":
             region = value
+        elif op == "--aligner":
+            aligner = value
+        elif op == "--go":
+            genome_others = value
         elif op == "-h":
             usage()
             sys.exit()
@@ -195,7 +206,7 @@ def printparamter1():
 
     alignmode = "Single-end"
     infiles = input_prefix
-    if pairedend:
+    if pairedend == "True":
         alignmode = "Paired-end"
         infiles = input_prefix1 + ", " + input_prefix2
 
@@ -254,18 +265,38 @@ def build_index():
 
 def alignmentSingle():
     if (genome_index == "") or (input_prefix == "None") or (output_prefix == "None"):
-        print "Please check the pramater."
-        runprogram(abspath + "BatMeth2")
+        print "Please check the pramater.\ngenome: " + genome_index + "\ninput: " + input_prefix + "\noutput_prefix:" + output_prefix
+        if aligner == "BatMeth2":
+            runprogram(abspath + "BatMeth2")
         sys.exit()
-    cmd = abspath + "/batmeth2-align" + " -g " + genome_index + " -p " + str(threads) + " -n " + str(mismatches) + " -i " + input_prefix + " -o " + output_prefix
+    if aligner == "BatMeth2":
+        cmd = abspath + "/batmeth2-align" + " -g " + genome_index + " -p " + str(threads) + " -n " + str(mismatches) + " -i " + input_prefix + " -o " + output_prefix + ".sam"
+    elif aligner == "bwa-meth":
+        cmd = "bwameth.py --reference " + genome_others + " " + input_prefix + " -t " + str(threads) > output_prefix + ".sam"
+    elif aligner == "bsmap":
+        cmd = "bsmap -a " + input_prefix + " -d " + genome_index + " -o " + output_prefix + ".sam -p " + str(threads) + " -r " + 0
+    elif aligner == "bismark2":
+        cmd = "bismark " + os.path.dirname(genome_others) + " -U " + input_prefix + " --bowtie2 " + " -p " + str(threads) + " --prefix " + output_prefix + " --sam"
+    else:
+        print "Please select correct aligner. (BatMeth2/bwa-meth/bsmap/bismark2)"
     runprogram(cmd)
 
 def alignmentPaired():
     if (genome_index == "") or (input_prefix1 == "") or (output_prefix == "None") or (input_prefix2 == ""):
-        print "Please check the pramater."
-        runprogram(abspath + "BatMeth2")
+        print "Please check aligner pramaters.\ngenome: " + genome_index + "\ninput1: " + input_prefix1 + "\ninput2: " + input_prefix2 + "\noutput_prefix:" + output_prefix
+        if aligner == "BatMeth2":
+            runprogram(abspath + "BatMeth2")
         sys.exit()
-    cmd = abspath + "/batmeth2-align" + " -g " + genome_index + " -p " + str(threads) + " -n " + str(mismatches) + " -i " + input_prefix1 + "-i " + input_prefix2 + " -o " + output_prefix
+    if aligner == "BatMeth2":
+        cmd = abspath + "/batmeth2-align" + " -g " + genome_index + " -p " + str(threads) + " -n " + str(mismatches) + " -i " + input_prefix1 + " -i " + input_prefix2 + " -o " + output_prefix + ".sam"
+    elif aligner == "bwa-meth":
+        cmd = "bwameth.py --reference " + genome_others + " " + input_prefix1 + " " + input_prefix2 + " -t " + str(threads) + " > " + output_prefix + ".sam"
+    elif aligner == "bsmap":
+        cmd = "bsmap -a " + input_prefix1 + " -b " + input_prefix2 + " -d " + genome_index + " -o " + output_prefix + ".sam -p " + str(threads) + " -r " + 0
+    elif aligner == "bismark2":
+        cmd = "bismark " + os.path.dirname(genome_others) + " -1 " + input_prefix1 + " -2 " + input_prefix2 + " --bowtie2 " + " -p " + str(threads) + " --prefix " + output_prefix + " --sam"
+    else:
+        print "Please select correct aligner. (BatMeth2/bwa-meth/bsmap/bismark2)"
     runprogram(cmd)
 
 def annoation():
@@ -415,7 +446,7 @@ def runpipe():
     printparamter2()
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Alignment ..."
     align_result = output_prefix + ".sam"
-    if pairedend:
+    if pairedend == "True":
         alignmentPaired()
     else:
         alignmentSingle()
