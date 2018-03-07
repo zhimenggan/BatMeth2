@@ -45,6 +45,10 @@ mode:  build_index, pipel, align, calmeth, annoation, methyPlot, batDMR, visul2s
     Usage: BatMeth2 build_index genomefile. (must run this step first)<br>
 
 **[pipel (Contains: align, calmeth, annoation, methyPlot, mkreport)]** <br>
+    **[select aligner]** <br>
+    --aligner &emsp;&emsp; BatMeth2(default), bwa-meth, bsmap, bismark2 <br>
+    **[other aligners paramaters]** <br>
+    --go &emsp;&emsp;&emsp; Name of the genome, contaion index build by aligner. (bwa-meth/bismark2) <br>
     **[main paramaters]** <br>
     -o &emsp; Name of output file prefix<br>
     **[alignment paramaters]** <br>
