@@ -311,6 +311,7 @@ int main(int argc, char* argv[])
 		string log=Output_Name;log+=".log.txt";
 		FILE* OUTLOG=File_Open(log.c_str(),"w");
 		string mCdensity=Output_Name;mCdensity+=".mCdensity.txt";
+                string mCcatero=Output_Name;mCcatero+=".mCcatero.txt";
 		
 		try
 		{
@@ -836,9 +837,13 @@ int main(int argc, char* argv[])
 				{
 					fprintf(mC_DENSITY,"\t%lu",mCHHdensity[i]);
 				}
-				fprintf(mC_DENSITY,"\nM\t%u\nMh\t%u\nH\t%u\nhU\t%u\nU\t%u",M,Mh,H,hU,U);
-				fprintf(mC_DENSITY,"\nCpG_M\t%u\nCpG_Mh\t%u\nCpG_H\t%u\nCpG_hU\t%u\nCpG_U\t%u",M_CG,Mh_CG,H_CG,hU_CG,U_CG);
-				
+                                fclose(mC_DENSITY);
+
+                                FILE* mC_CATERO=File_Open(mCcatero.c_str(),"w");
+				fprintf(mC_CATERO,"\nM\t%u\nMh\t%u\nH\t%u\nhU\t%u\nU\t%u",M,Mh,H,hU,U);
+				fprintf(mC_CATERO,"\nCpG_M\t%u\nCpG_Mh\t%u\nCpG_H\t%u\nCpG_hU\t%u\nCpG_U\t%u",M_CG,Mh_CG,H_CG,hU_CG,U_CG);
+                                fclose(mC_CATERO);				
+
 				printf("\n[CpG]  M: %u Mh: %u H: %u hU: %u U: %u\n",M_CG,Mh_CG,H_CG,hU_CG,U_CG);
 				printf("\n[mC]   M: %u Mh: %u H: %u hU: %u U: %u\n",M,Mh,H,hU,U);
 				fprintf(OUTLOG,"\n[CpG]  M: %u Mh: %u H: %u hU: %u U: %u\n",M_CG,Mh_CG,H_CG,hU_CG,U_CG);

@@ -432,6 +432,8 @@ def methyPlot():
     cmd = "Rscript "+ abspath + "/density_plot_with_methyl_oneSample_oneGff.r "+ output_prefix + ".methBins.txt " + output_prefix + ".annoDensity.1.txt " + output_prefix + ".density.pdf " + output_prefix
     ##cmd = cmd.format(**locals())
     runprogram(cmd)
+    cmd = "Rscript " + abspath + "/mCdensity.r " + output_prefix + ".mCdensity.txt" + output_prefix + ".mCdensity.pdf" + output_prefix + ".mCcatero.txt" + output_prefix + ".mCcatero.pdf"
+    runprogram(cmd)
     cmd = abspath + "/GeneMethHeatmap " + output_prefix + " None " + str(CG) + " " + str(CHG) + " " + str(CHH)
     runprogram(cmd)
 

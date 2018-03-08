@@ -15,7 +15,7 @@ plot(x=seq(1:100), y =a[3,], type="h", lwd = 10, lend = 2, col="black", xlab = "
 dev.off()
 
 ###png
-png(paste(gsub("pdf","",outFile),"mCdensity.png", sep=""), width=660, height= (200 * 3),res=96)
+png(paste(gsub("pdf","",outFile),"png", sep=""), width=660, height= (200 * 3),res=96)
 par(mfrow=c(3,1), mar=c(4,4,3,2))
 plot(x=seq(1:100), y =a[1,], type="h", lwd = 10, lend = 2, col="red", xlab = "", ylab = "number", main = "mCG")
 plot(x=seq(1:100), y =a[2,], type="h", lwd = 10, lend = 2, col="green", xlab = "", ylab = "number", main = "mCHG")
@@ -37,7 +37,7 @@ axis(1,at=c(1,2,3,4,5),labels=c("CpG_M","CpG_Mh","CpG_H","CpG_hU","CpG_U"))
 dev.off()
 
 ###png
-png(paste(gsub("pdf","",outFile2),"mCcatero.png", sep=""), width=660, height= (200 * 2),res=96)
+png(paste(gsub("pdf","",outFile2),"png", sep=""), width=660, height= (200 * 2),res=96)
 par(mfrow=c(2,1), mar=c(4,4,3,2))
 
 plot(x=seq(1:5), y=head(a, n=5L)[,1], xaxt="n",type="h", lwd = 20, lend = 2, xlab = "", ylab = "number", main = "Total Cytosines")

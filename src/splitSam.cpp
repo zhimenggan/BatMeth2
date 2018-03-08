@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
 	Char2Comp['T']=Char2Comp['t']='A';
 	Char2Comp['N']=Char2Comp['n']='N';
 	int Genome_CountX=0;
-	char* Output_Name;
+	char* Output_Name = "None";
 	string Prefix="None";
 	string methOutfileName;
 	string methWigOutfileName;
