@@ -1038,6 +1038,13 @@ void *Process_read(void *arg)
 			pos_P = 0;
 			Insert_Size = 0;
 		}
+		map<string, int>::iterator iter;
+		iter = String_Hash.find(Chrom);
+		int H = -1;
+		if(iter != String_Hash.end())
+			H = iter->second;
+		else
+			continue;
 		readString=forReadString;
 		int Read_Len=readString.length();
 		CIGr=CIG;
@@ -1063,7 +1070,6 @@ void *Process_read(void *arg)
 		assert(hitType!=0);
 		char* Genome;
 		//
-		int H=String_Hash[Chrom];
 		Genome=((ARGS *)arg)->Genome_List[H].Genome;//load current genome..
 		
 		unsigned G_Skip=Genome-((ARGS *)arg)->Org_Genome;

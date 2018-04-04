@@ -51,7 +51,7 @@ def usage():
 
     print "\n[pipel (Contains: align, calmeth, annoation, methyPlot, mkreport)]"
     print "    [select aligner]"
-    print "    --aligner    BatMeth2(default), bwa-meth, bsmap, bismark2"
+    print "    --aligner    BatMeth2(default), bwa-meth(v1), bsmap, bismark2"
     print "    [other aligners paramaters]"
     print "    --go    Name of the genome, contaion index build by aligner. (bwa-meth/bismark2)"
     print "    [main paramaters]"
@@ -272,7 +272,7 @@ def alignmentSingle():
     if aligner == "BatMeth2":
         cmd = abspath + "/batmeth2-align" + " -g " + genome_index + " -p " + str(threads) + " -n " + str(mismatches) + " -i " + input_prefix + " -o " + output_prefix + ".sam"
     elif aligner == "bwa-meth":
-        cmd = "bwameth.py --reference " + genome_others + " " + input_prefix + " -t " + str(threads) > output_prefix + ".sam"
+        cmd = "bwameth.py --reference " + genome_others + " " + input_prefix + " -t " + str(threads) + " --prefix " + output_prefix + ".sam"
     elif aligner == "bsmap":
         cmd = "bsmap -a " + input_prefix + " -d " + genome_index + " -o " + output_prefix + ".sam -p " + str(threads) + " -r " + 0
     elif aligner == "bismark2":
@@ -290,7 +290,7 @@ def alignmentPaired():
     if aligner == "BatMeth2":
         cmd = abspath + "/batmeth2-align" + " -g " + genome_index + " -p " + str(threads) + " -n " + str(mismatches) + " -i " + input_prefix1 + " -i " + input_prefix2 + " -o " + output_prefix + ".sam"
     elif aligner == "bwa-meth":
-        cmd = "bwameth.py --reference " + genome_others + " " + input_prefix1 + " " + input_prefix2 + " -t " + str(threads) + " > " + output_prefix + ".sam"
+        cmd = "bwameth.py --reference " + genome_others + " " + input_prefix1 + " " + input_prefix2 + " -t " + str(threads) + " --prefix " + output_prefix + ".sam"
     elif aligner == "bsmap":
         cmd = "bsmap -a " + input_prefix1 + " -b " + input_prefix2 + " -d " + genome_index + " -o " + output_prefix + ".sam -p " + str(threads) + " -r " + 0
     elif aligner == "bismark2":
@@ -431,6 +431,8 @@ def methyPlot():
     runprogram(cmd)
     cmd = "Rscript "+ abspath + "/density_plot_with_methyl_oneSample_oneGff.r "+ output_prefix + ".methBins.txt " + output_prefix + ".annoDensity.1.txt " + output_prefix + ".density.pdf " + output_prefix
     ##cmd = cmd.format(**locals())
+    runprogram(cmd)
+    cmd = "Rscript " + abspath + "/mCdensity.r " + output_prefix + ".mCdensity.txt" + output_prefix + ".mCdensity.pdf" + output_prefix + ".mCcatero.txt" + output_prefix + ".mCcatero.pdf"
     runprogram(cmd)
     cmd = abspath + "/GeneMethHeatmap " + output_prefix + " None " + str(CG) + " " + str(CHG) + " " + str(CHH)
     runprogram(cmd)
