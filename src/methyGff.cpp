@@ -1029,15 +1029,18 @@ void caculateHeatmap(const char* type,int start,int end,Methy_Hash MethyList,cha
       }
         if(printtitle && (!strcmp(type,"GENE") || !strcmp(type,"TSS")))
 	{
-		fprintf(methGffcg,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
-		fprintf(methGffchg,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
-		fprintf(methGffchh,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
-                fprintf(methGffcg_matrix,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
-                fprintf(methGffchg_matrix,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
-                fprintf(methGffchh_matrix,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
-                fprintf(methGffcg,"%s",id);
-                fprintf(methGffchg,"%s",id);
-                fprintf(methGffchh,"%s",id);
+		if(!strcmp(type,"GENE")){
+			fprintf(methGffcg,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
+			fprintf(methGffchg,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
+			fprintf(methGffchh,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
+		}else{
+        	        fprintf(methGffcg_matrix,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
+	                fprintf(methGffchg_matrix,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
+                	fprintf(methGffchh_matrix,"%s\t%d\t%d\t%s\t.\t.",chrom,geneS+1,geneE+1,id);
+        	        fprintf(methGffcg,"%s",id);
+	                fprintf(methGffchg,"%s",id);
+                	fprintf(methGffchh,"%s",id);
+		}
 	}else if(printtitle) {
 		fprintf(methGffcg,"%s",id);
 	        fprintf(methGffchg,"%s",id);
@@ -1132,7 +1135,7 @@ void caculateHeatmap(const char* type,int start,int end,Methy_Hash MethyList,cha
         }
 	if(strcmp(type,"GENE")!=0){
         	fprintf(methGffcg,"\t%d\n",BeginNo_cg);
-		fprintf(methGffcg_matrix,"\n",BeginNo_cg);
+		if(strcmp(type,"TSS")==0) fprintf(methGffcg_matrix,"\n",BeginNo_cg);
 	        fprintf(methGffchg,"\t%d\n",BeginNo_chg);
         	fprintf(methGffchh,"\t%d\n",BeginNo_chh);
 	}
