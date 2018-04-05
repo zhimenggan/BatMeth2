@@ -51,7 +51,7 @@ def usage():
 
     print "\n[pipel (Contains: align, calmeth, annoation, methyPlot, mkreport)]"
     print "    [select aligner]"
-    print "    --aligner    BatMeth2(default), bwa-meth(v1), bsmap, bismark2"
+    print "    --aligner    BatMeth2(default), bwa-meth(v1), bsmap, bismark2, no (exit out_prefix.sam file, no need align again)"
     print "    [other aligners paramaters]"
     print "    --go    Name of the genome, contaion index build by aligner. (bwa-meth/bismark2)"
     print "    [main paramaters]"
@@ -264,6 +264,8 @@ def build_index():
     runprogram(cmd)
 
 def alignmentSingle():
+    if aligner == "no":
+        return
     if (genome_index == "") or (input_prefix == "None") or (output_prefix == "None"):
         print "Please check the pramater.\ngenome: " + genome_index + "\ninput: " + input_prefix + "\noutput_prefix:" + output_prefix
         if aligner == "BatMeth2":
@@ -277,11 +279,15 @@ def alignmentSingle():
         cmd = "bsmap -a " + input_prefix + " -d " + genome_index + " -o " + output_prefix + ".sam -p " + str(threads) + " -r " + 0
     elif aligner == "bismark2":
         cmd = "bismark " + os.path.dirname(genome_others) + " -U " + input_prefix + " --bowtie2 " + " -p " + str(threads) + " --prefix " + output_prefix + " --sam"
+    elif aligner == "no":
+        return
     else:
         print "Please select correct aligner. (BatMeth2/bwa-meth/bsmap/bismark2)"
     runprogram(cmd)
 
 def alignmentPaired():
+    if aligner == "no":
+        return
     if (genome_index == "") or (input_prefix1 == "") or (output_prefix == "None") or (input_prefix2 == ""):
         print "Please check aligner pramaters.\ngenome: " + genome_index + "\ninput1: " + input_prefix1 + "\ninput2: " + input_prefix2 + "\noutput_prefix:" + output_prefix
         if aligner == "BatMeth2":
@@ -295,6 +301,8 @@ def alignmentPaired():
         cmd = "bsmap -a " + input_prefix1 + " -b " + input_prefix2 + " -d " + genome_index + " -o " + output_prefix + ".sam -p " + str(threads) + " -r " + 0
     elif aligner == "bismark2":
         cmd = "bismark " + os.path.dirname(genome_others) + " -1 " + input_prefix1 + " -2 " + input_prefix2 + " --bowtie2 " + " -p " + str(threads) + " --prefix " + output_prefix + " --sam"
+    elif aligner == "no":
+        return
     else:
         print "Please select correct aligner. (BatMeth2/bwa-meth/bsmap/bismark2)"
     runprogram(cmd)

@@ -28,13 +28,10 @@ Methyl2[,3] <- Methyl2[,3]+1
 chrMethyl<-Methyl[Methyl$context=="CG",]
 chr<-levels(chrMethyl$chr)
 chrNum=length(chr)
-for (i in 1:chrNum){ 
-         ndx <- which(chrMethyl[, 1]==chr[i] )
-    if(length(ndx)!=0) {
+for (i in 1:chrNum){ ndx <- which(chrMethyl[, 1]==chr[i] )
          lstMeth <- max(chrMethyl[ndx, 2])
          if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
          if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-    }
 }
 
 p <- ggplot() + stat_smooth(se=F,size=1,data=chrMethyl,aes(x=pos, y=Methyl,colour=as.factor(gsub("Chr|chr","CG",chr) )),method="auto",linetype=1)  +
@@ -55,11 +52,9 @@ chrMethyl<-Methyl[Methyl$context=="CHG",]
 chr<-levels(chrMethyl$chr)
 chrNum=length(chr)
 for (i in 1:chrNum){ ndx <- which(chrMethyl[, 1]==chr[i] )
-         if(length(ndx)!=0) {
                      lstMeth <- max(chrMethyl[ndx, 2])
                      if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
                      if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-         }
 }
 
 (p1 <- p + stat_smooth(se=F,size=1,data=chrMethyl,aes(x=pos, y=Methyl,colour=as.factor(gsub("Chr|chr","CHG",chr) )),method="auto",linetype=2)  +
@@ -70,11 +65,9 @@ chrMethyl<-Methyl[Methyl$context=="CHH",]
 chr<-levels(chrMethyl$chr)
 chrNum=length(chr)
 for (i in 1:chrNum){ ndx <- which(chrMethyl[, 1]==chr[i] )
-       if(length(ndx)!=0) {
                      lstMeth <- max(chrMethyl[ndx, 2])
                      if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
                      if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-        }
 }
 
 #p <- ggplot() #chrMethyl,aes(x=pos, y=Methyl,colour=as.factor(chr))
@@ -86,11 +79,9 @@ chrMethyl<-Methyl2[Methyl2$context=="CG",]
 chr<-levels(chrMethyl$chr)
 chrNum=length(chr)
 for (i in 1:chrNum){ ndx <- which(chrMethyl[, 1]==chr[i] )
-        if(length(ndx)!=0) {
                      lstMeth <- max(chrMethyl[ndx, 2])
                      if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
                      if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-        }
 }
 
 
@@ -102,11 +93,9 @@ chrMethyl<-Methyl2[Methyl2$context=="CHG",]
 chr<-levels(chrMethyl$chr)
 chrNum=length(chr)
 for (i in 1:chrNum){ ndx <- which(chrMethyl[, 1]==chr[i] )
-       if(length(ndx)!=0) {
                      lstMeth <- max(chrMethyl[ndx, 2])
                      if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
                      if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-        }
 }
 
 
@@ -118,11 +107,9 @@ chrMethyl<-Methyl2[Methyl2$context=="CHH",]
 chr<-levels(chrMethyl$chr)
 chrNum=length(chr)
 for (i in 1:chrNum){ ndx <- which(chrMethyl[, 1]==chr[i] )
-         if(length(ndx)!=0) {
                      lstMeth <- max(chrMethyl[ndx, 2])
                      if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
                      if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-          }
 }
 
 (p5 <- p4 + stat_smooth(se=F,size=1,data=chrMethyl,aes(x=pos, y=Methyl,colour=as.factor(gsub("Chr|chr","CHH",chr)) ),method="auto",linetype=3)  +
@@ -138,23 +125,19 @@ chrDensity<-density[density$strand=="+-",]
 chr<-levels(chrDensity$chr)
 chrNum=length(chr)
 for (i in 1:chrNum){ ndx <- which(chrDensity[, 1]==chr[i] )
-         if(length(ndx)!=0) {
                      lstMeth <- max(chrDensity[ndx, 2])
                      if (i < chrNum) ndx2 <- which(chrDensity[, 1]== chr[i+1] )
                      if (i < chrNum) chrDensity[ndx2, 2] <- chrDensity[ndx2, 2] + lstMeth
-          }
 }
 
 bpMidVec <- vector(length=chrNum)
 bpMidVeX <- vector(length=chrNum)
 
 for (i in 1:chrNum){ndx <- which(chrDensity[, 1]==chr[i] )
-     if(length(ndx)!=0) {
                     posSub <- chrDensity[ndx, 2]
                     bpMidVec[i] <- ((max(posSub) - min(posSub))/2) + min(posSub) #
                     if((max(posSub) - min(posSub)) < 100){chr[i]=""}
                     bpMidVeX[i] <- max(posSub)
-     }
 }
 
 (p6 <- p5 + geom_smooth(se=F,size=1,data=chrDensity,aes(x=pos, y=density,colour=as.factor(gsub("Chr|chr","gene",chr)) ),method="auto",linetype=1)+
@@ -169,23 +152,19 @@ chrDensity<-density[density$strand=="+-",]
 chr<-levels(chrDensity$chr)
 chrNum=length(chr)
 for (i in 1:chrNum){ ndx <- which(chrDensity[, 1]==chr[i] )
-     if(length(ndx)!=0) {
                      lstMeth <- max(chrDensity[ndx, 2])
                      if (i < chrNum) ndx2 <- which(chrDensity[, 1]== chr[i+1] )
                      if (i < chrNum) chrDensity[ndx2, 2] <- chrDensity[ndx2, 2] + lstMeth
-     }
 }
 
 bpMidVec <- vector(length=chrNum)
 bpMidVeX <- vector(length=chrNum)
 
 for (i in 1:chrNum){ndx <- which(chrDensity[, 1]==chr[i] )
-     if(length(ndx)!=0) {
                     posSub <- chrDensity[ndx, 2]
                     bpMidVec[i] <- ((max(posSub) - min(posSub))/2) + min(posSub) #
                     if((max(posSub) - min(posSub)) < 100){chr[i]=""}
                     bpMidVeX[i] <- max(posSub)
-     }
 }
 pdf(outPDF,width=12,height=7)
 (p7 <- p6 + geom_smooth(se=F,size=1,data=chrDensity,aes(x=pos, y=density,colour=as.factor(gsub("Chr|chr","TE",chr)) ),method="auto",linetype=1)+

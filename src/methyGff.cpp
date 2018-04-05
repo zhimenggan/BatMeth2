@@ -222,6 +222,7 @@ int main(int argc, char* argv[])
 	{
 		try
 		{
+			printf("Output prefix: %s\n", Output_Name);
 			time(&Start_Time);
 
 			string L=Geno;L+=".ann.location";
@@ -387,7 +388,7 @@ if(countC > countCT) printf("Wrong pos %d, %d %d\n", pos, countC, countCT);
 			}
 			for(int f=FileS;f<=FileE;f++){
 				AverPerCG=0;AverPerCHG=0;AverPerCHH=0;AverCG=0;AverCHG=0;AverCHH=0;
-				printf("\nProcessing %d out of %d. InFile: %s", f-FileS+1,FileE-FileS+1, argv[f]);
+				printf("\nProcessing %d out of %d. InFile: %s\n", f-FileS+1,FileE-FileS+1, argv[f]);
 					FILE* GFFINFILE=File_Open(argv[f],"r");
 					bool bed4 = false; int showbed = 0;
 					int filelen = strlen(argv[f]);
@@ -430,9 +431,9 @@ if(countC > countCT) printf("Wrong pos %d, %d %d\n", pos, countC, countCT);
 					FILE* MethGff_TSS_OUTFILEcg;
 					FILE* MethGff_TSS_OUTFILEchg;
 					FILE* MethGff_TSS_OUTFILEchh;
-					char TSS_cg_matrix[100];sprintf (TSS_cg, "%s.TSS.cg.%d.matrix", Output_Name, f-FileS+1);
-                                        char TSS_chg_matrix[100];sprintf (TSS_chg, "%s.TSS.chg.%d.matrix", Output_Name, f-FileS+1);
-                                        char TSS_chh_matrix[100];sprintf (TSS_chh, "%s.TSS.chh.%d.matrix", Output_Name, f-FileS+1);
+					char TSS_cg_matrix[100];sprintf (TSS_cg_matrix, "%s.TSS.cg.%d.matrix", Output_Name, f-FileS+1);
+                                        char TSS_chg_matrix[100];sprintf (TSS_chg_matrix, "%s.TSS.chg.%d.matrix", Output_Name, f-FileS+1);
+                                        char TSS_chh_matrix[100];sprintf (TSS_chh_matrix, "%s.TSS.chh.%d.matrix", Output_Name, f-FileS+1);
                                         FILE* MethGff_TSS_OUTFILEcg_matrix;
                                         FILE* MethGff_TSS_OUTFILEchg_matrix;
                                         FILE* MethGff_TSS_OUTFILEchh_matrix;

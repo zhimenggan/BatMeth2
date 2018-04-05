@@ -33,7 +33,6 @@ maxMethOri=1:chrNum
 POINT=FALSE
 for (i in 1:chrNum){ 
   ndx <- which(chrMethyl[, 1]==chr[i] )
-  if(length(ndx)!=0) {
   lstMeth <- max(chrMethyl[ndx, 2])
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
@@ -41,7 +40,6 @@ for (i in 1:chrNum){
   if(maxMeth[i]<=1000) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
   if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-  }
 }
 #as.factor(gsub("Chr|chr","CG",chr) )
 
@@ -59,7 +57,6 @@ maxMethOri=1:chrNum
 POINT=FALSE
 for (i in 1:chrNum){ 
   ndx <- which(chrMethyl[, 1]==chr[i] )
-  if(length(ndx)!=0) {
   lstMeth <- max(chrMethyl[ndx, 2])
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
@@ -67,7 +64,6 @@ for (i in 1:chrNum){
   if(maxMeth[i]<=1000) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
   if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-  }
 }
 
 if(POINT) {
@@ -83,8 +79,7 @@ maxMeth=1:chrNum
 maxMethOri=1:chrNum
 POINT=FALSE
 for (i in 1:chrNum){ 
-  ndx <- which(chrMethyl[, 1]==chr[i] ) 
-  if(length(ndx)!=0) {
+  ndx <- which(chrMethyl[, 1]==chr[i] )
   lstMeth <- max(chrMethyl[ndx, 2])
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
@@ -92,7 +87,6 @@ for (i in 1:chrNum){
   if(maxMeth[i]<=1000) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
   if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
-  }
 }
 
 if(POINT){
@@ -114,7 +108,6 @@ maxMethOri=1:chrNum
 POINT=FALSE
 for (i in 1:chrNum){ 
   ndx <- which(chrDensity[, 1]==chr[i] )
-  if(length(ndx)!=0) {
   lstMeth <- max(chrDensity[ndx, 2])
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
@@ -122,7 +115,6 @@ for (i in 1:chrNum){
   if(maxMeth[i]<=1000) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrDensity[, 1]== chr[i+1] )
   if (i < chrNum) chrDensity[ndx2, 2] <- chrDensity[ndx2, 2] + lstMeth
-  }
 }
 
 bpMidVec <- vector(length=chrNum)
@@ -153,7 +145,6 @@ maxMethOri=1:chrNum
 POINT=FALSE
 for (i in 1:chrNum){
   ndx <- which(chrDensity[, 1]==chr[i] )
-  if(length(ndx)!=0) {
   lstMeth <- max(chrDensity[ndx, 2])
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
@@ -161,20 +152,16 @@ for (i in 1:chrNum){
   if(maxMeth[i]<=1000) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrDensity[, 1]== chr[i+1] )
   if (i < chrNum) chrDensity[ndx2, 2] <- chrDensity[ndx2, 2] + lstMeth
-  }
 }
 
 bpMidVec <- vector(length=chrNum)
 bpMidVeX <- vector(length=chrNum)
 
-for (i in 1:chrNum){
-                    ndx <- which(chrDensity[, 1]==chr[i] )
-   if(length(ndx)!=0) {
+for (i in 1:chrNum){ndx <- which(chrDensity[, 1]==chr[i] )
                     posSub <- chrDensity[ndx, 2]
                     bpMidVec[i] <- ((max(posSub) - min(posSub))/2) + min(posSub) #
                     if((max(posSub) - min(posSub)) < 100){chr[i]=""}
                     bpMidVeX[i] <- max(posSub)
-   }
 }
 pdf(outPDF,width=12,height=7)
 if(POINT){
