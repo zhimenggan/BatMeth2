@@ -1132,6 +1132,7 @@ void caculateHeatmap(const char* type,int start,int end,Methy_Hash MethyList,cha
         }
 	if(strcmp(type,"GENE")!=0){
         	fprintf(methGffcg,"\t%d\n",BeginNo_cg);
+		fprintf(methGffcg_matrix,"\n",BeginNo_cg);
 	        fprintf(methGffchg,"\t%d\n",BeginNo_chg);
         	fprintf(methGffchh,"\t%d\n",BeginNo_chh);
 	}
