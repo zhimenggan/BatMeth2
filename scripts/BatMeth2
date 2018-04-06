@@ -28,7 +28,7 @@ step = 0.025
 distance = 2000
 gfffile = "None"
 bedfile = "None"
-
+GTF = "False"
 ##mode
 mode = "pipel"
 
@@ -72,7 +72,7 @@ def usage():
     print "    --binCover=    >= <INT> nCs per region. default:3"
     print "    --chromstep=   Chromsome using an overlapping sliding window of 100000bp at a step of 50000bp. default step: 50000(bp)"
     print "    [annoation paramaters]"
-    print "    --gtf=/--bed=    Gtf or gff file / bed file"
+    print "    --gtf=/--gff=/--bed=    Gtf or gff file / bed file"
     print "    --distance=    DNA methylation level distributions in body and <INT>-bp flanking sequences. The distance of upstream and downstream. default:2000"
     print "    --step=    Gene body and their flanking sequences using an overlapping sliding window of 5% of the sequence length at a step of 2.5% of the sequence length. So default step: 0.025 (2.5%)"
     print "    [mkreport paramaters]"
@@ -97,10 +97,10 @@ if len(sys.argv) < 3:
     sys.exit()
 
 def detect_paramater():
-    opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:", ["gtf=", "bed=", "coverage=", "binCover=", 
+    opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
         "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go="])
     global pairedend, input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual, aligner, genome_others
-    global gfffile
+    global gfffile, GTF
     for op, value in opts:
 #        print op, value
         if op == "-i":
@@ -119,6 +119,9 @@ def detect_paramater():
         elif op == "-n":
             mismatches = value
         elif op == "--gtf":
+            gfffile = value
+            GTF = "True"
+        elif op == "--gff":
             gfffile = value
         elif op == "--bed":
             bedfile = value
@@ -310,7 +313,10 @@ def alignmentPaired():
 def annoation():
     methratio = output_prefix + ".methratio.txt"
     if gfffile != "None":
-        cmd = abspath + "/methyGff" + " -o " + output_prefix + " -G " + genome_index + " -gff " + gfffile + " -m " + methratio + " -B -P --TSS --TTS --GENE"
+        if GTF == "True":
+            cmd = abspath + "/methyGff" + " -o " + output_prefix + " -G " + genome_index + " -gtf " + gfffile + " -m " + methratio + " -B -P --TSS --TTS --GENE"
+        else:
+            cmd = abspath + "/methyGff" + " -o " + output_prefix + " -G " + genome_index + " -gff " + gfffile + " -m " + methratio + " -B -P --TSS --TTS --GENE"
     elif bedfile != "None":
         cmd = abspath + "/methyGff" + " -o " + output_prefix + " -G " + genome_index + " -b " + bedfile + " -m " + methratio + " -B -P --TSS --TTS --GENE"
     elif step != 0.025:
@@ -440,7 +446,7 @@ def methyPlot():
     cmd = "Rscript "+ abspath + "/density_plot_with_methyl_oneSample_oneGff.r "+ output_prefix + ".methBins.txt " + output_prefix + ".annoDensity.1.txt " + output_prefix + ".density.pdf " + output_prefix
     ##cmd = cmd.format(**locals())
     runprogram(cmd)
-    cmd = "Rscript " + abspath + "/mCdensity.r " + output_prefix + ".mCdensity.txt" + output_prefix + ".mCdensity.pdf" + output_prefix + ".mCcatero.txt" + output_prefix + ".mCcatero.pdf"
+    cmd = "Rscript " + abspath + "/mCdensity.r " + output_prefix + ".mCdensity.txt " + output_prefix + ".mCdensity.pdf " + output_prefix + ".mCcatero.txt " + output_prefix + ".mCcatero.pdf"
     runprogram(cmd)
     cmd = abspath + "/GeneMethHeatmap " + output_prefix + " None " + str(CG) + " " + str(CHG) + " " + str(CHH)
     runprogram(cmd)
