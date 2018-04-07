@@ -98,9 +98,9 @@ if len(sys.argv) < 3:
 
 def detect_paramater():
     opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
-        "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go="])
+        "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go=", "redup="])
     global pairedend, input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual, aligner, genome_others
-    global gfffile, GTF
+    global gfffile, GTF, ReDup
     for op, value in opts:
 #        print op, value
         if op == "-i":
@@ -139,6 +139,8 @@ def detect_paramater():
             Qual = value
         elif op == "--region":
             region = value
+        elif op == "--redup":
+            redup = 1
         elif op == "--aligner":
             aligner = value
         elif op == "--go":
@@ -223,7 +225,7 @@ def printparamter2():
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Process Pramater file2."
     fparamater2 = mkpath + "/images/Paramater2.txt"
     Fparamater2 = open(fparamater2, "w")
-    Sparamater2 = "Paramater\tValue\nThreads\t" + str(threads) + "\nCalmeth\tparamaters\n" + "Quality_Score\t" + str(Qual) + "\nredup\t1\n" + "meth region length\t" + str(region) +  "\ncalmeth and methyGff\tparamaters\n" +  "Coverage\t" + str(coverage) + "\nbinCoverage\t" + str(binCover) + "\nchromStep\t" + str(chromstep) + "\nmethyGff\tParamaters\n" + "Gene bins step\t" + str(step) + "\nDistance of upstream and downstream\t"+ str(distance)
+    Sparamater2 = "Paramater\tValue\nThreads\t" + str(threads) + "\nCalmeth\tparamaters\n" + "Quality_Score\t" + str(Qual) + "\nredup\t" + str(redup) +"\n" + "meth region length\t" + str(region) +  "\ncalmeth and methyGff\tparamaters\n" +  "Coverage\t" + str(coverage) + "\nbinCoverage\t" + str(binCover) + "\nchromStep\t" + str(chromstep) + "\nmethyGff\tParamaters\n" + "Gene bins step\t" + str(step) + "\nDistance of upstream and downstream\t"+ str(distance)
 
     Fparamater2.write(Sparamater2)
     Fparamater2.close()
@@ -245,7 +247,10 @@ def calmeth(genome_index, mismatches, inputf, output_prefix, threads):
     if inputf == "None":
         print "Must have input sam file (-i paramater)."
         sys.exit()
-    cmd = abspath + "/splitSam" + " -g " + genome_index + " -n " + str(mismatches) + " -i " + inputf + " -m " + output_prefix  + " -p " + str(threads)
+    rd = " "
+    if redup == 1:
+        rd = " -r"
+    cmd = abspath + "/splitSam" + " -g " + genome_index + " -n " + str(mismatches) + " -i " + inputf + " -m " + output_prefix  + " -p " + str(threads) + rd
     if chromstep != 50000:
         cmd = cmd + " -s " + chromstep
     elif coverage != 5:

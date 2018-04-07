@@ -1061,7 +1061,7 @@ void caculateHeatmap(const char* type,int start,int end,Methy_Hash MethyList,cha
 		        	}
 	        	}  
 	        	if(Smeth_cg[i]>1) Smeth_cg[i]=0;
-			if(Smeth_cg[i] == -1){
+			if(Smeth_cg[i] < 0){
 				if(!strcmp(type, "GENE")) fprintf(methGffcg,"\tnan");
 				else if(!strcmp(type, "TSS")) {
 					fprintf(methGffcg,"\t0");
@@ -1077,7 +1077,7 @@ void caculateHeatmap(const char* type,int start,int end,Methy_Hash MethyList,cha
 		        	}
 	        	}  
 	        	if(Smeth_chg[i]>1) Smeth_chg[i]=0;
-			if(Smeth_chg[i] == -1){
+			if(Smeth_chg[i] < 0){
                                 if(!strcmp(type, "GENE")) fprintf(methGffchg,"\tnan");
                                 else if(!strcmp(type, "TSS")) {
                                         fprintf(methGffchg,"\t0");
@@ -1093,13 +1093,13 @@ void caculateHeatmap(const char* type,int start,int end,Methy_Hash MethyList,cha
 		        	}
 	        	}  
 	        	if(Smeth_chh[i]>1) Smeth_chh[i]=0;
-			if(Smeth_chh[i] == -1){
+			if(Smeth_chh[i] < 0){
                                 if(!strcmp(type, "GENE")) fprintf(methGffchh,"\tnan");
                                 else if(!strcmp(type, "TSS")) {
                                         fprintf(methGffchh,"\t0");
                                         fprintf(methGffchh_matrix,"\tnan");
                                 }else fprintf(methGffchh,"\t0");
-                        }else fprintf(methGffchh,"\t%f",Smeth_cg[i]);
+                        }else fprintf(methGffchh,"\t%f",Smeth_chh[i]);
 	        }
         }
         
@@ -1135,7 +1135,11 @@ void caculateHeatmap(const char* type,int start,int end,Methy_Hash MethyList,cha
         }
 	if(strcmp(type,"GENE")!=0){
         	fprintf(methGffcg,"\t%d\n",BeginNo_cg);
-		if(strcmp(type,"TSS")==0) fprintf(methGffcg_matrix,"\n",BeginNo_cg);
+		if(strcmp(type,"TSS")==0) {
+			fprintf(methGffcg_matrix,"\n");
+			fprintf(methGffchg_matrix,"\n");
+			fprintf(methGffchh_matrix,"\n");
+		}
 	        fprintf(methGffchg,"\t%d\n",BeginNo_chg);
         	fprintf(methGffchh,"\t%d\n",BeginNo_chh);
 	}
