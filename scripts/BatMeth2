@@ -65,7 +65,7 @@ def usage():
     print "    -p <interger>    Launch <integer> threads"
     print "    [calmeth paramaters]"
     print "    --Qual=      calculate the methratio while read QulityScore >= Q. default:10"
-    print "    --redup=     REMOVE_DUP"
+    print "    --redup=     REMOVE_DUP, 0 or 1, default 0"
     print "    --region=    Bins for DMR calculate , default 1000bp ."
     print "    [calmeth and annoation paramaters]"
     print "    --coverage=    >= <INT> coverage. default:5"
@@ -140,7 +140,7 @@ def detect_paramater():
         elif op == "--region":
             region = value
         elif op == "--redup":
-            redup = 1
+            redup = value
         elif op == "--aligner":
             aligner = value
         elif op == "--go":
