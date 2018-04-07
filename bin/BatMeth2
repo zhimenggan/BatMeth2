@@ -100,7 +100,7 @@ def detect_paramater():
     opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
         "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go=", "redup="])
     global pairedend, input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual, aligner, genome_others
-    global gfffile, GTF, ReDup
+    global gfffile, GTF, redup
     for op, value in opts:
 #        print op, value
         if op == "-i":
