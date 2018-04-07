@@ -18,6 +18,7 @@ output_prefix = "None"
 Qual = 10
 redup = 0
 region = 1000
+sammeth = 0
 ##calmeth and methyGff
 coverage = 5
 binCover = 3
@@ -51,11 +52,11 @@ def usage():
 
     print "\n[pipel (Contains: align, calmeth, annoation, methyPlot, mkreport)]"
     print "    [select aligner]"
-    print "    --aligner    BatMeth2(default), bwa-meth(v1), bsmap, bismark2, no (exit out_prefix.sam file, no need align again)"
+    print "    --aligner=    BatMeth2(default), bwa-meth(v1), bsmap, bismark2, no (exit out_prefix.sam file, no need align again)"
     print "    [other aligners paramaters]"
-    print "    --go    Name of the genome, contaion index build by aligner. (bwa-meth/bismark2)"
+    print "    --go=    Name of the genome, contaion index build by aligner. (bwa-meth/bismark2)"
     print "    [main paramaters]"
-    print "    -o    Name of output file prefix"
+    print "    -o [outprefix]    Name of output file prefix"
     print "    [alignment paramaters]"
     print "    -i    Name of input file, if paired-end. please use -1, -2"
     print "    -1    Name of input file left end, if single-end. please use -i"
@@ -67,6 +68,7 @@ def usage():
     print "    --Qual=      calculate the methratio while read QulityScore >= Q. default:10"
     print "    --redup=     REMOVE_DUP, 0 or 1, default 0"
     print "    --region=    Bins for DMR calculate , default 1000bp ."
+    print "    -f           for sam format outfile contain methState. [0 or 1], default: 0 (dont output this file)."
     print "    [calmeth and annoation paramaters]"
     print "    --coverage=    >= <INT> coverage. default:5"
     print "    --binCover=    >= <INT> nCs per region. default:3"
@@ -97,7 +99,7 @@ if len(sys.argv) < 3:
     sys.exit()
 
 def detect_paramater():
-    opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
+    opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:f:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
         "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go=", "redup="])
     global pairedend, input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual, aligner, genome_others
     global gfffile, GTF, redup
@@ -118,6 +120,8 @@ def detect_paramater():
             threads = value
         elif op == "-n":
             mismatches = value
+        elif op == "-f":
+            sammeth = value
         elif op == "--gtf":
             gfffile = value
             GTF = "True"
@@ -250,7 +254,11 @@ def calmeth(genome_index, mismatches, inputf, output_prefix, threads):
     rd = " "
     if redup == 1:
         rd = " -r"
-    cmd = abspath + "/splitSam" + " -g " + genome_index + " -n " + str(mismatches) + " -i " + inputf + " -m " + output_prefix  + " -p " + str(threads) + rd
+    sammethfile = " "
+    if sammeth == 1:
+        sammethfile =  " -f " + output_prefix + ".md.sam"
+        
+    cmd = abspath + "/splitSam" + " -g " + genome_index + " -n " + str(mismatches) + " -i " + inputf + " -m " + output_prefix  + " -p " + str(threads) + rd + sammethfile
     if chromstep != 50000:
         cmd = cmd + " -s " + chromstep
     elif coverage != 5:
