@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
 		"\t-n|--Nmismatch        Number of mismatches\n"
 		"\t-m|--methratio        [MethFileNamePrefix]  Predix of methratio output file\n"
 		"\t-Q [int]              caculate the methratio while read QulityScore >= Q. default:10\n"
-		"\t-C|--coverage         >= <INT> coverage. default:5\n"
+		"\t-c|--coverage         >= <INT> coverage. default:5\n"
 		"\t-nC		         >= <INT> nCs per region. default:5\n"
 		"\t-R |--Regions         Bins for DMR caculate , default 1kb .\n"
 		"\t-b|--binsfile         DNA methylation level distributions in chrosome, default output file: {methratioPrefix}.methBins.txt\n"
@@ -234,10 +234,10 @@ int main(int argc, char* argv[])
 			Methratio=true;
 			Prefix=argv[++i];
 		}
-		else if(!strcmp(argv[i],"-C") || !strcmp(argv[i],"--coverage"))
+		else if(!strcmp(argv[i],"-c") || !strcmp(argv[i],"--coverage"))
 		{
 			coverage=atoi(argv[++i]);
-		}else if(!strcmp(argv[i],"-nC"))
+                }else if(!strcmp(argv[i],"-nC"))
 		{
 			nCs=atoi(argv[++i]);
 		}

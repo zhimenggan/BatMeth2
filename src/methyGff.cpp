@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
 	int distanceHeatmap=2000;
 	int chromStep=50000;
 	int binsStep=1000;
-	int maxcover=600;
+	int maxcover=1000;
 	bool Diff=false;
 	bool PU=false;
 	bool TSS=false;

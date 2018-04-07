@@ -21,6 +21,7 @@ region = 1000
 sammeth = 0
 ##calmeth and methyGff
 coverage = 5
+maxcoverage = 1000
 binCover = 3
 chromstep = 50000
 
@@ -77,6 +78,7 @@ def usage():
     print "    --gtf=/--gff=/--bed=    Gtf or gff file / bed file"
     print "    --distance=    DNA methylation level distributions in body and <INT>-bp flanking sequences. The distance of upstream and downstream. default:2000"
     print "    --step=    Gene body and their flanking sequences using an overlapping sliding window of 5% of the sequence length at a step of 2.5% of the sequence length. So default step: 0.025 (2.5%)"
+    print "    -C         <= <INT> coverage. default:1000"
     print "    [mkreport paramaters]"
     print "    make a html report."
 
@@ -99,7 +101,7 @@ if len(sys.argv) < 3:
     sys.exit()
 
 def detect_paramater():
-    opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:f:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
+    opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:f:C:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
         "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go=", "redup="])
     global pairedend, input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual, aligner, genome_others
     global gfffile, GTF, redup
@@ -122,6 +124,8 @@ def detect_paramater():
             mismatches = value
         elif op == "-f":
             sammeth = value
+        elif op == "-C":
+            maxcoverage = value
         elif op == "--gtf":
             gfffile = value
             GTF = "True"
@@ -229,7 +233,7 @@ def printparamter2():
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Process Pramater file2."
     fparamater2 = mkpath + "/images/Paramater2.txt"
     Fparamater2 = open(fparamater2, "w")
-    Sparamater2 = "Paramater\tValue\nThreads\t" + str(threads) + "\nCalmeth\tparamaters\n" + "Quality_Score\t" + str(Qual) + "\nredup\t" + str(redup) +"\n" + "meth region length\t" + str(region) +  "\ncalmeth and methyGff\tparamaters\n" +  "Coverage\t" + str(coverage) + "\nbinCoverage\t" + str(binCover) + "\nchromStep\t" + str(chromstep) + "\nmethyGff\tParamaters\n" + "Gene bins step\t" + str(step) + "\nDistance of upstream and downstream\t"+ str(distance)
+    Sparamater2 = "Paramater\tValue\nThreads\t" + str(threads) + "\nCalmeth\tparamaters\n" + "Quality_Score\t" + str(Qual) + "\nredup\t" + str(redup) +"\n" + "meth region length\t" + str(region) +  "\ncalmeth and methyGff\tparamaters\n" +  "Coverage\t" + str(coverage) + "\nmaxCoverage\t" + str(maxcoverage) + "\nbinCoverage\t" + str(binCover) + "\nchromStep\t" + str(chromstep) + "\nmethyGff\tParamaters\n" + "Gene bins step\t" + str(step) + "\nDistance of upstream and downstream\t"+ str(distance)
 
     Fparamater2.write(Sparamater2)
     Fparamater2.close()
@@ -262,7 +266,7 @@ def calmeth(genome_index, mismatches, inputf, output_prefix, threads):
     if chromstep != 50000:
         cmd = cmd + " -s " + chromstep
     elif coverage != 5:
-        cmd = cmd + " -C " + coverage
+        cmd = cmd + " -c " + coverage
     elif binCover != 3:
         cmd = cmd + " -nC " + binCover
     elif Qual != 10:
@@ -337,7 +341,9 @@ def annoation():
     elif chromstep != 50000:
         cmd = cmd + " -S " + chromstep
     elif coverage != 5:
-        cmd = cmd + " -C " + coverage
+        cmd = cmd + " -c " + coverage
+    elif maxcoverage != 1000:
+        cmd = cmd + " -C " + maxcoverage
     elif binCover != 3:
         cmd = cmd + " -nC " + binCover
     elif distance != 2000:
