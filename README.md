@@ -46,20 +46,23 @@ mode:  build_index, pipel, align, calmeth, annoation, methyPlot, batDMR, visul2s
 
 **[pipel (Contains: align, calmeth, annoation, methyPlot, mkreport)]** <br>
     **[select aligner]** <br>
-    --aligner &emsp;&emsp; BatMeth2(default), bwa-meth, bsmap, bismark2 <br>
+    --aligner &emsp;&emsp; BatMeth2(default), bwa-meth, bsmap, bismark2, no <br>
     **[other aligners paramaters]** <br>
     --go &emsp;&emsp;&emsp; Name of the genome, contaion index build by aligner. (bwa-meth/bismark2) <br>
     **[main paramaters]** <br>
     -o &emsp; Name of output file prefix<br>
     **[alignment paramaters]** <br>
-    -i &emsp;&ensp; Name of input file <br>
+    -i &emsp;&ensp; Name of input file, if paired-end. please use -1, -2 <br>
+    -1 &emsp;&ensp; Name of input file left end, if single-end. please use -i <br>
+    -2 &emsp;&ensp; Name of input file left end <br>
     -g &emsp; Name of the genome mapped against <br>
     -n &emsp; maximum mismatches allowed due to seq. errors <br>
     -p <interger> &emsp; Launch <integer> threads <br>
     **[calmeth paramaters]** <br>
     --Qual &emsp;&ensp;&ensp; calculate the methratio while read QulityScore >= Q. default:10 <br>
-    --redup &emsp;&ensp; REMOVE_DUP <br>
+    --redup &emsp;&ensp; REMOVE_DUP, 0 or 1, default 0 <br>
     --region &emsp; Bins for DMR calculate , default 1000bp . <br>
+    -f  &emsp;&ensp; for sam format outfile contain methState. [0 or 1], default: 0 (dont output this file). <br>
     **[calmeth and annoation paramaters]** <br>
     --coverage &emsp;&ensp; >= <INT> coverage. default:5 <br>
     --binCover &emsp;&ensp; >= <INT> nCs per region. default:3 <br>
@@ -68,6 +71,7 @@ mode:  build_index, pipel, align, calmeth, annoation, methyPlot, batDMR, visul2s
     --gtf/--bed &emsp; Gtf or gff file / bed file <br>
     --distance &emsp;&ensp; DNA methylation level distributions in body and <INT>-bp flanking sequences. The distance of upstream and downstream. default:2000 <br>
     --step &emsp;&emsp; Gene body and their flanking sequences using an overlapping sliding window of 5% of the sequence length at a step of 2.5% of the sequence length. So default step: 0.025 (2.5%) <br>
+    -C   &emsp;&emsp;   <= <INT> coverage. default:1000 <br>
     **[mkreport paramaters]** <br>
     Make a batmeth2 html report, can see the detail in BatMeth2_Report/ directory. <br>
 
