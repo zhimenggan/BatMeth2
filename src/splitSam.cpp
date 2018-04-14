@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
 {
 	time_t Start_Time,End_Time;
 	
-	const char* Help_String="Command Format :  split [options] -g GENOME  -i Samfile -m <methratio outfile prefix> -p 6\n"
+	const char* Help_String="Command Format :  calmeth [options] -g GENOME  -i Samfile -m <methratio outfile prefix> -p 6\n"
 		"\nUsage:\n"
 		"\t-g|--genome           Genome\n"
 		"\t-i|--input            Sam format file\n"
@@ -251,6 +251,10 @@ int main(int argc, char* argv[])
 			}
 			if(argv[i][0]=='-') {InFileEnd=--i;}else {InFileEnd=i ;}
 		}
+		else if(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")){
+			printf("\n%s\n",Help_String);
+                        exit(0);
+		}
 		else
 		{
 			printf("\nError: %s\n\n%s \n",argv[i],Help_String);
@@ -260,8 +264,8 @@ int main(int argc, char* argv[])
 	}
 	for(int i = 0; i < argc; i++) {CMD.append(argv[i]); CMD.append(" ");}
 	printf("Coverage and validC: %d %d\n", coverage, nCs);
-	if(argc<=1) printf("%s \n",Help_String);
-	if (argc >1  && InFileStart) 
+	if(argc<=3) printf("%s \n",Help_String);
+	if (argc >3  && InFileStart) 
 	{
 		printf("\nBatMeth2::Split v2.0\n");
 		string log;

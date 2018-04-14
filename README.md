@@ -101,9 +101,9 @@ $ `BatMeth2 align -g INDEX -i INPUT_left -i INPUT_right -o OUTPUT_prefix --threa
 
 **[2] Get Methylation**
 
-$ `BatMeth2 calmeth [options] -o [FINAL_RESULT] -g GENOME -n [number of mismatches] -i [all temp(s) from batmeth] -m [methratio outfile]`
+$ `BatMeth2 calmeth [options] -g GENOME -n [number of mismatches] -i [alignment sam file] -m [methratio outfile]`
 
-example: BatMeth2 calmeth -f -o Final_Result.sam -g ../../../Genome/batmeth2/all.con -n 2 -i batmeth2outPrefix.* -m Final.methratio.txt
+example: BatMeth2 calmeth -g ../../../Genome/batmeth2/all.con -n 2 -i batmeth2outPrefix.sam -m Final.methratio.txt
    
 **[3] Detect BSseq SNP using approximate Bayesian modeling** 
 
@@ -126,7 +126,7 @@ c) BS-Seq variation detection (use BS-Snper software)
    
 **[4] Gene OR TEs DNA methylation level and density** 
 
-   $ `BatMeth2 methyGff [options] -o [OUT_PREFIX] -G GENOME -g <GFF file>/-b <bed file> -m [from Split methratio outfile] [-B] [-P]` 
+   $ `BatMeth2 methyGff [options] -o [OUT_PREFIX] -G GENOME -gff <GFF file>/-gtf <gtf file>/-b <bed file> -m [from Split methratio outfile] [-B] [-P]` 
    
 **[5] DNA methylation data visulization**  *(required R package : ggplot2{install.packages("ggplot2")})*  
 
