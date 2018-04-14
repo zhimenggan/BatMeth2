@@ -37,7 +37,7 @@ for (i in 1:chrNum){
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
   maxMethOri[i] <- lstMeth
-  if(maxMeth[i]<=1000) POINT=TRUE
+  if(maxMeth[i]<=100) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
   if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
 }
@@ -61,7 +61,7 @@ for (i in 1:chrNum){
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
   maxMethOri[i] <- lstMeth
-  if(maxMeth[i]<=1000) POINT=TRUE
+  if(maxMeth[i]<=100) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
   if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
 }
@@ -84,7 +84,7 @@ for (i in 1:chrNum){
   if(i > 1) maxMeth[i] <- (lstMeth - maxMethOri[i-1])
   else maxMeth[i] <- lstMeth
   maxMethOri[i] <- lstMeth
-  if(maxMeth[i]<=1000) POINT=TRUE
+  if(maxMeth[i]<=100) POINT=TRUE
   if (i < chrNum) ndx2 <- which(chrMethyl[, 1]== chr[i+1] )
   if (i < chrNum) chrMethyl[ndx2, 2] <- chrMethyl[ndx2, 2] + lstMeth
 }
@@ -222,6 +222,6 @@ pdf(outPDFf,width=12,height=7)
 library(gridExtra)
 grid.arrange(p7,empty, bottom, empty, ncol=2, nrow=2, widths=c(1, 0.06),heights=c(7.6,1) ,padding= unit(0, "line"))
 dev.off()
-png(outpngf,width=860, height=580,res=96)
+png(outpngf,width=1720, height=580,res=96)
 grid.arrange(p7,empty, bottom, empty, ncol=2, nrow=2, widths=c(1, 0.06),heights=c(7.6,1) ,padding= unit(0, "line"))
 dev.off()

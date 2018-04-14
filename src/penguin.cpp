@@ -898,9 +898,9 @@ void *Map_And_Pair_Solexa(void *T)
 //			}//rm
 		}
 	}
-printf("\n%d %d %d\n",ntemp,Total_Reads,Nindel);
-printf("\nTime&N %d %d %d %d %d %d %d %d %d %d\nNN %d %d %d %d %d %d\n",time1,time2,time3,time4,time5,N1,N2,N3,N4,N5,NN1,NN2,NN3,NN4,NN_indels1,NN_indels2);
-printf("\nTH %d %d %d %d %d %d %d %d %d %d %d\n",TH1,TH2_1,TH2,TH3,TH4,TH5,TH6,TH7,TH8,TH9,TH10);
+//printf("\n%d %d %d\n",ntemp,Total_Reads,Nindel);
+//printf("\nTime&N %d %d %d %d %d %d %d %d %d %d\nNN %d %d %d %d %d %d\n",time1,time2,time3,time4,time5,N1,N2,N3,N4,N5,NN1,NN2,NN3,NN4,NN_indels1,NN_indels2);
+//printf("\nTH %d %d %d %d %d %d %d %d %d %d %d\n",TH1,TH2_1,TH2,TH3,TH4,TH5,TH6,TH7,TH8,TH9,TH10);
 	//--------------------------GA----------------------------
 	MF_GA.Left_Mishits.clear();MC_GA.Left_Mishits.clear();
 	MF_GA.Right_Mishits.clear();MC_GA.Right_Mishits.clear();

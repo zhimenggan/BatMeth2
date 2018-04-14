@@ -104,7 +104,7 @@ def detect_paramater():
     opts, args = getopt.getopt(sys.argv[2:], "hi:1:2:o:n:g:p:f:C:", ["gtf=", "gff=", "bed=", "coverage=", "binCover=", 
         "chromstep=", "step=", "distance=", "Qual=", "region=", "aligner=", "go=", "redup="])
     global pairedend, input_prefix, input_prefix1, input_prefix2, output_prefix, genome_index, threads, mismatches, region, Qual, aligner, genome_others
-    global gfffile, GTF, redup
+    global gfffile, GTF, redup, sammeth
     for op, value in opts:
 #        print op, value
         if op == "-i":
@@ -222,9 +222,7 @@ def printparamter1():
     if pairedend == "True":
         alignmode = "Paired-end"
         infiles = input_prefix1 + ", " + input_prefix2
-
     Sparamater = "Program\tBatMeth2.v1\nWorkdir\t" + workdir + "\nAligner\tBatMeth2-align\nGenome\t" + genome_index + "\nAnnotation\t" + gfffile + "/" + bedfile + "\nOutput-prefix\t"+ output_prefix + "\nInput\t"+ infiles +  "\nAlignment-Mode\t" + alignmode
-
     Fparamater.write(Sparamater)
     Fparamater.close()
 
@@ -233,7 +231,7 @@ def printparamter2():
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Process Pramater file2."
     fparamater2 = mkpath + "/images/Paramater2.txt"
     Fparamater2 = open(fparamater2, "w")
-    Sparamater2 = "Paramater\tValue\nThreads\t" + str(threads) + "\nCalmeth\tparamaters\n" + "Quality_Score\t" + str(Qual) + "\nredup\t" + str(redup) +"\n" + "meth region length\t" + str(region) +  "\ncalmeth and methyGff\tparamaters\n" +  "Coverage\t" + str(coverage) + "\nmaxCoverage\t" + str(maxcoverage) + "\nbinCoverage\t" + str(binCover) + "\nchromStep\t" + str(chromstep) + "\nmethyGff\tParamaters\n" + "Gene bins step\t" + str(step) + "\nDistance of upstream and downstream\t"+ str(distance)
+    Sparamater2 = "Paramater\tValue\nThreads\t" + str(threads) + "\nCalmeth\tparamaters\n" + "Quality_Score\t" + str(Qual) + "\nredup\t" + str(redup) +"\n" + "meth region length\t" + str(region) + "\nPrint methstate samfile\t" + str(sammeth) +  "\ncalmeth and methyGff\tparamaters\n" +  "Coverage\t" + str(coverage) + "\nmaxCoverage\t" + str(maxcoverage) + "\nbinCoverage\t" + str(binCover) + "\nchromStep\t" + str(chromstep) + "\nmethyGff\tParamaters\n" + "Gene bins step\t" + str(step) + "\nDistance of upstream and downstream\t"+ str(distance)
 
     Fparamater2.write(Sparamater2)
     Fparamater2.close()
@@ -256,12 +254,12 @@ def calmeth(genome_index, mismatches, inputf, output_prefix, threads):
         print "Must have input sam file (-i paramater)."
         sys.exit()
     rd = " "
-    if redup == 1:
+    if redup == "1":
         rd = " -r"
     sammethfile = " "
-    if sammeth == 1:
+    if sammeth == "1":
         sammethfile =  " -f " + output_prefix + ".md.sam"
-        
+    
     cmd = abspath + "/splitSam" + " -g " + genome_index + " -n " + str(mismatches) + " -i " + inputf + " -m " + output_prefix  + " -p " + str(threads) + rd + sammethfile
     if chromstep != 50000:
         cmd = cmd + " -s " + chromstep
@@ -476,17 +474,17 @@ def visul2sample():
 ## whole pipeline for DNA methylation analysis. Contains alignment, calute meth level, DNA methylation annatation
 ## on gff file or bed region, DNA methylation visulization. Differentail analysis use diffmeth function.
 def runpipe():
-    copydir(oldreportdir, mkpath)
-    printparamter1()
-    printparamter2()
-    print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Alignment ..."
+    #copydir(oldreportdir, mkpath)
+    #printparamter1()
+    #printparamter2()
+    #print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Alignment ..."
     align_result = output_prefix + ".sam"
-    if pairedend == "True":
-        alignmentPaired()
-    else:
-        alignmentSingle()
-    print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Alignment summary ..."
-    alignmentstate()
+    #if pairedend == "True":
+    #    alignmentPaired()
+    #else:
+    #    alignmentSingle()
+    #print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Alignment summary ..."
+    #alignmentstate()
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Methylation Status ..."
     calmeth(genome_index, mismatches, align_result, output_prefix, threads)
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Annotation ..."
