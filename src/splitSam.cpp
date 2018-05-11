@@ -7,7 +7,6 @@
 #include <math.h>
 #include "limits.h"
 #include <map>
-#include<vector>
 #include <pthread.h>
 #include <algorithm>
 #include <stdarg.h>
@@ -126,7 +125,7 @@ unsigned long non_met_CHH=0;
 unsigned long met_CHH=0;
 
 int Sam=1;//1 true 0 false
-unsigned Number_of_Tags;
+unsigned Number_of_Tags = 0;
 //}-----------------------------   GLOBAL VARIABLES  -------------------------------------------------
 char Char2Comp[255];
 const int INITIAL_PROGRESS_READS =10000;//progress bar initial count..

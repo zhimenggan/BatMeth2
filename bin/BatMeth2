@@ -159,8 +159,8 @@ def detect_paramater():
 
 mode = sys.argv[1]
 
-if mode == "pipel":
-    detect_paramater()
+#if mode == "pipel":
+detect_paramater()
 
 path1 = os.path.dirname(__file__)
 abspath = os.path.abspath(path1) + "/"
@@ -514,8 +514,10 @@ if command == "build_index":
 elif command == "pipel":
     runpipe()
 elif command == "align":
-    cmd = abspath + "/batmeth2-align " + para
-    runprogram(cmd)
+    if pairedend == "True":
+        alignmentPaired()
+    else:
+        alignmentSingle()
 elif command == "calmeth":
     cmd = abspath + "/splitSam " + para
     runprogram(cmd)
