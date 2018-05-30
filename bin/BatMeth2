@@ -96,7 +96,7 @@ def usage():
     print "    see the details in 'BatMeth2 visul2sample'\n"
 
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 2:
     usage()
     sys.exit()
 
@@ -159,8 +159,8 @@ def detect_paramater():
 
 mode = sys.argv[1]
 
-#if mode == "pipel":
-detect_paramater()
+if mode == "pipel":
+    detect_paramater()
 
 path1 = os.path.dirname(__file__)
 abspath = os.path.abspath(path1) + "/"
@@ -203,7 +203,8 @@ def printStatus():
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Input file: ", input_prefix, " ", input_prefix1, " ", input_prefix2
     print "[", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())), "] Outfile prefix: ", output_prefix
 
-if(sys.argv[1] != "build_index"):
+#if(sys.argv[1] != "build_index"):
+if(sys.argv[1] == "pipel"):
 	printStatus()
 
 oldreportdir = abspath + "/../BatMeth2-Report"
