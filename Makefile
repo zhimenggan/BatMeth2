@@ -191,9 +191,10 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src scripts 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
-	cd src/BS-Snper/ && sh BS-Snper.sh && cd ../../
+	#cd src/BS-Snper/ && sh BS-Snper.sh && cd ../../
 	cd src/batDMR && make clean && make
-	g++ ./src/splitSam.cpp -o ./src/splitSam -lpthread
+	#g++ ./src/splitSam.cpp -o ./src/splitSam -lpthread
+	g++ ./src/splitSam.cpp -o ./src/splitSam -m64 -I./src/samtools-0.1.18/ -L./src/samtools-0.1.18/ -lbam -lz -lpthread
 	g++ ./src/methyGff.cpp -o ./src/methyGff
 
 .SUFFIXES:
@@ -703,10 +704,10 @@ copy:
 	cp src/*.r bin
 	cp src/DMCannotation* bin
 	cp src/GeneMethHeatmap ./bin/
-	cp src/BS-Snper/BS-Snper ./bin
-	cp src/BS-Snper/bsSnp ./bin
-	cp src/BS-Snper/chrLenExtract ./bin
-	cp src/BS-Snper/Help ./bin
+	#cp src/BS-Snper/BS-Snper ./bin
+	#cp src/BS-Snper/bsSnp ./bin
+	cp scripts/chrLenExtract ./bin
+	#cp src/BS-Snper/Help ./bin
 	cp src/batDMR/batDMR ./bin
 	cp scripts/BatMeth2 ./bin
 	cp src/splitSam bin

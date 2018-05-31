@@ -26,8 +26,8 @@ copy:
 	cp src/*.r bin
 	cp src/DMCannotation* bin
 	cp src/GeneMethHeatmap ./bin/
-	cp src/BS-Snper/BS-Snper ./bin
-	cp src/BS-Snper/bsSnp ./bin
-	cp src/BS-Snper/chrLenExtract ./bin
-	cp src/BS-Snper/Help ./bin
+	#cp src/BS-Snper/BS-Snper ./bin
+	#cp src/BS-Snper/bsSnp ./bin
+	cp scripts/chrLenExtract ./bin
+	#cp src/BS-Snper/Help ./bin
 	cp src/batDMR/batDMR ./bin

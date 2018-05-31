@@ -12,6 +12,29 @@
 #include <stdarg.h>
 #include <time.h>
 #include <errno.h>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+        #include "./samtools-0.1.18/sam_header.h"
+        #include "./samtools-0.1.18/sam.h"
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+        bam_header_t *bam_header_dup(const bam_header_t *h0);
+        samfile_t *samopen(const char *fn, const char *mode, const void *aux);
+        void samclose(samfile_t *fp);
+#ifdef __cplusplus
+}
+#endif
+
+
 #define MAX_HITS_ALLOWED 1500
 #define CHROMSIZE 100
 #define BATBUF 50000
@@ -55,7 +78,10 @@ typedef struct {
    char* Marked_GenomeE;
    Methy_Hash* Methy_List;
    FILE* OUTFILE;
-   FILE* INFILE;
+   FILE* samINFILE;
+   samfile_t* BamInFile;
+   bam1_t *b;
+   bam_header_t *header;
    int ThreadID;
    off64_t File_Size;
 } ARGS;
@@ -123,6 +149,7 @@ unsigned long non_met_CHG=0;
 unsigned long met_CHG=0;
 unsigned long non_met_CHH=0;
 unsigned long met_CHH=0;
+bool bamformat=false;
 
 int Sam=1;//1 true 0 false
 unsigned Number_of_Tags = 0;
@@ -141,10 +168,11 @@ int main(int argc, char* argv[])
 {
 	time_t Start_Time,End_Time;
 	
-	const char* Help_String="Command Format :  calmeth [options] -g GENOME  -i Samfile -m <methratio outfile prefix> -p 6\n"
+	const char* Help_String="Command Format :  calmeth [options] -g GENOME  -i/-b <Samfile/Bamfile> -m <methratio outfile prefix> -p 6\n"
 		"\nUsage:\n"
 		"\t-g|--genome           Genome\n"
 		"\t-i|--input            Sam format file\n"
+		"\t-b|--binput           Bam format file\n"
 		"\t-p|--threads          the number of threads.\n"
 		"\t-n|--Nmismatch        Number of mismatches\n"
 		"\t-m|--methratio        [MethFileNamePrefix]  Predix of methratio output file\n"
@@ -152,7 +180,7 @@ int main(int argc, char* argv[])
 		"\t-c|--coverage         >= <INT> coverage. default:5\n"
 		"\t-nC		         >= <INT> nCs per region. default:5\n"
 		"\t-R |--Regions         Bins for DMR caculate , default 1kb .\n"
-		"\t-b|--binsfile         DNA methylation level distributions in chrosome, default output file: {methratioPrefix}.methBins.txt\n"
+		"\t--binsfile            DNA methylation level distributions in chrosome, default output file: {methratioPrefix}.methBins.txt\n"
 		"\t-s|--step             Chrosome using an overlapping sliding window of 100000bp at a step of 50000bp. default step: 50000(bp)\n"
 		"\t-r|--remove_dup       REMOVE_DUP, default:false\n"
 		"\t-f|--sam [outfile]    f for sam format outfile contain methState. default: sam format.\n"
@@ -177,6 +205,7 @@ int main(int argc, char* argv[])
 	int coverage=5;
 	int binspan=50000;
 	int nCs=5;
+	
 	//
 	unsigned int M=0,Mh=0,H=0,hU=0,U=0;
 	unsigned int M_CG=0,Mh_CG=0,H_CG=0,hU_CG=0,U_CG=0;
@@ -220,7 +249,7 @@ int main(int argc, char* argv[])
 		{
 			RegionBins=atoi(argv[++i]);
 		}
-		else if(!strcmp(argv[i], "-b") || !strcmp(argv[i], "--binsfile"))
+		else if(!strcmp(argv[i], "--binsfile"))
 		{
 			binsOutfileName=argv[++i];
 		}
@@ -249,6 +278,16 @@ int main(int argc, char* argv[])
 				continue;
 			}
 			if(argv[i][0]=='-') {InFileEnd=--i;}else {InFileEnd=i ;}
+		}else if(!strcmp(argv[i], "-b") || !strcmp(argv[i], "--binput"))
+		{
+			InFileStart=++i;
+			while(i!=(argc-1) && argv[i][0]!='-')
+			{
+				i++;
+				continue;
+			}
+			if(argv[i][0]=='-') {InFileEnd=--i;}else {InFileEnd=i ;}
+			bamformat=true;
 		}
 		else if(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")){
 			printf("\n%s\n",Help_String);
@@ -367,23 +406,37 @@ int main(int argc, char* argv[])
 			for(int f=InFileStart;f<=InFileEnd;f++)
 			{
 				printf("\nProcessing %d out of %d. File: %s\n\n", f-InFileStart+1,InFileEnd-InFileStart+1, argv[f]);
-				args.INFILE=File_Open(argv[f],"r");
-				fseek(args.INFILE, 0L, SEEK_END);args.File_Size=ftello64(args.INFILE);rewind(args.INFILE);
+				//fseek(args.INFILE, 0L, SEEK_END);args.File_Size=ftello64(args.INFILE);rewind(args.INFILE);
 				char s2t[BATBUF];
-				if(f==InFileStart && printheader && args.OUTFILE!=NULL){
-					while (fgets(s2t,BATBUF,args.INFILE)!=0 ){
-				                if(s2t[0]=='@') 
-				                {    
-			                            s2t[BATBUF]='\0';s2t[BATBUF-1]='\n';
-                        			    if(Sam){
-                        			        fprintf(args.OUTFILE,"%s",s2t);
-                        			    }    
-			                            continue;
-                				}else
-							break;
+				if(args.OUTFILE!=NULL){ // && printheader
+					//samfile_t *bamin = 0;
+					args.BamInFile = 0;
+					args.b;args.header;
+                    if(bamformat)
+                    {
+                            if ((args.BamInFile = samopen(argv[f], "rb", 0)) == 0) {
+                                    fprintf(stderr, "fail to open \"%s\" for reading.\n", argv[f]);
+                            }
+                            args.b = bam_init1();
+                            args.header=bam_header_dup((const bam_header_t*)args.BamInFile->header);
+                            if(InFileStart) fprintf(args.OUTFILE,"%s",args.header->text);
+                    }
+                    else if(f==InFileStart){
+                    	args.samINFILE=File_Open(argv[f],"r");
+						while (fgets(s2t,BATBUF,args.samINFILE)!=0 ){
+				                	if(s2t[0]=='@') 
+				                	{    
+			                            	s2t[BATBUF]='\0';s2t[BATBUF-1]='\n';
+                        			    	if(Sam){
+                        			    	    
+                        				    }    
+			                    	        continue;
+                					}else
+								break;
+						}
+						rewind(args.samINFILE);
 					}
 				}
-				rewind(args.INFILE);
 				//threads
 				if(NTHREAD)
 				{
@@ -410,7 +463,13 @@ int main(int argc, char* argv[])
 				}else
 					Process_read(&args);
 				Done_Progress();
-				fclose(args.INFILE);
+				if(!bamformat) fclose(args.samINFILE);
+            	if(bamformat) 
+            	{
+                	bam_header_destroy(args.header);
+                	bam_destroy1(args.b);
+                	samclose(args.BamInFile);
+            	}
 			 }
 
 			//
@@ -1011,12 +1070,19 @@ void *Process_read(void *arg)
 	char Chrom_P[CHROMSIZE];int pos_P=0;int Insert_Size=0;int Qsingle=0; //Paired-end reads
 	string CIGr;char CIG[BATBUF];
 	char forQuality[BATBUF],rcQuality[BATBUF],Quality[BATBUF];
-
-	while (fgets(s2t,BATBUF,( (ARGS *)arg)->INFILE)!=0 ) 
+	int r;
+	while( (!bamformat && fgets(s2t,BATBUF,((ARGS *)arg)->samINFILE)!=0) || (bamformat && (r = samread(( (ARGS *)arg)->BamInFile, ((ARGS *)arg)->b)) >= 0 ))
 	{
+		if(bamformat) 
+		{
+			char *tmp = bam_format1_core( ((ARGS *)arg)->header , ((ARGS *)arg)->b, 0); //2 >>2&3
+			strcpy(s2t, tmp);
+			free(tmp);
+		}
 		Total_Reads++;
 		Progress++;
-                fileprocess++;
+        fileprocess++;
+        /*
 		if ( Progress>=Number_of_Tags && ( ((ARGS *)arg)->ThreadID==1 || !NTHREAD ) ) 
 		{
 			off64_t Current_Pos=ftello64(((ARGS *)arg)->INFILE);
@@ -1025,10 +1091,11 @@ void *Process_read(void *arg)
 			Progress=0;
 			Show_Progress(Current_Pos*100/((ARGS *)arg)->File_Size);
 		}
+		*/
 		if ( fileprocess>=1000000 && ( ((ARGS *)arg)->ThreadID==1 || !NTHREAD ) ) {
                         fprintf_time(stderr, "Processed %d reads.\n", Total_Reads);
                         fileprocess = 0;
-                }
+        }
 
 		if(s2t[0]=='@') 
 		{
