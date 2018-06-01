@@ -47,7 +47,7 @@ abspath = ""
 
 def usage():
     print "\nBatMeth2 [mode] [paramaters]"
-    print "mode:  build_index, pipel, align, calmeth, annoation, methyPlot, batDMR, visul2sample, mkreport"
+    print "mode:  build_index, pipel, align, calmeth, annoation, methyPlot, batDMR, visul2sample, mkreport, DMCplot"
     print "\n[build_index]"
     print "    Usage: BatMeth2 build_index genomefile. (must run this step first)"
 
@@ -522,18 +522,20 @@ elif command == "align":
 elif command == "calmeth":
     cmd = abspath + "/splitSam " + para
     runprogram(cmd)
-elif command == "anno":
+elif command == "annoation":
     cmd = abspath + "/methyGff " + para
     runprogram(cmd)
-elif command == "visul":
+elif command == "methyPlot":
     cmd = abspath + "/methyPlot" + para
     runprogram(cmd)
-elif command == "diffmeth":
+elif command == "batDMR":
     cmd = abspath + "/batDMR" + para
     runprogram(cmd)
-elif command == "DManno":
+elif command == "DMCplot":
     cmd = abspath + "/DMCannotationPlot" + para
     runprogram(cmd)
+elif command == "visul2sample":
+    visul2sample()
 elif command == "mkreport":
     mkreport()
 else:
